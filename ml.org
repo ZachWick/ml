@@ -1,0 +1,18 @@
+#+TITLE: ml .org file
+#+AUTHOR: zach wick <zach@zachwick.com>
+
+* BUGS
+** TODO line wrapping/breaking at screen edge
+Don't rely on the terminal to wrap/break as needed. Determine how wide
+the terminal is and pretty-print in nice columns
+
+* FEATURES
+** TODO implement single file ls behavior (eg. `ls ./.emacs`)
+** TODO implement -l switch (long format)
+** TODO implement -a switch (all nodes)
+*** TODO only print non-hidden nodes (only nodes that don't begin with .)
+** TODO implement -r switch (print in reverse order)
+** TODO implement -R switch (recursive)
+** TODO implement color printing
+
+* NOTES
