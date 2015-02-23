@@ -4,3 +4,58 @@ An `ls`-like program written as an educational exercise
 
 Copyright 2015 zach wick <zach@zachwick.com>
 Licensed under the GNU GPLv3 or later
+
+1. Build Requirements:
+----------------------
+REQUIRED:
+- gcc
+- GNU make
+
+OPTIONAL
+- docco
+- valgrind
+
+2. Building and Installing:
+---------------------------
+- Clone the ml repo
+
+  git clone git@github.com:/zachwick/ml.git ml
+
+- cd into the ml/src directory
+
+  cd ml/src
+
+- compile ml using GNU make
+
+  make
+
+- (OPTIONAL) make the annotated source documentation
+
+  make docs
+
+- (OPTIONAL) run valgrind against the ml binary
+
+  make test
+
+- (OPTIONAL) install the ml binary
+  NB: default install location requires root permission
+
+  make install
+
+- (OPTIONAL) replace GNU 'ls' with 'ml'
+  NB: requires root permission
+
+  make replace_gnu
+
+3. Contributing:
+----------------
+ml is intended to be an educational project. Therefore, code clarity will always
+take precedence over execution speed, binary size, and programming style.
+
+In that vein, instead of contributing to ml, you should use ml as inspiration
+and implement your own ls-like utility.
+
+If you really want to contribute to ml, I am not going to stop you however. After
+making sure that your changes conform to the ml vision (code clarity above all)
+submit a pull request via Github.
+
