@@ -18,7 +18,7 @@
 const char *argp_program_version = "ml 0.0.2";
 const char *arpg_program_bug_address = "<zach@zachwick.com>";
 static char doc[] = "an ls-like program part of edutils.";
-static char args_doc[] = "[FILENAME]";
+static char args_doc[] = "[FILE]";
 static struct argp_option options[] = {
 	{"long", 'l', 0, 0, "Use long output format"},
 	{0}
@@ -26,6 +26,7 @@ static struct argp_option options[] = {
 
 struct arguments {
 	int long_output;
+	char *args[1];
 };
 
 static error_t
@@ -43,6 +44,7 @@ parse_opt (int key, char *arg, struct argp_state *state) {
 			// Too many arguments were passed to `ml`
 			argp_usage (state);
 		}
+		arguments->args[state->arg_num] = arg;
 		break;
 	default:
 		return ARGP_ERR_UNKNOWN;
@@ -81,10 +83,10 @@ main(int argc, char **argv) {
 
 	// If a directory path is not supplied, use the present working directory
 	// as a default
-	if (argc < 2) {
+	if (argc == 1 || (arguments.long_output && argc == 2)) {
 		dirname = getcwd (NULL, 0);
 	} else {
-		dirname = argv[1];
+		dirname = arguments.args[0];
 	}
 
 	// Call the scandir function.

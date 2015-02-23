@@ -29,7 +29,7 @@
               </div>
               <p>ml - mini list
 An <code>ls</code>-like program written as an educational exercise</p>
-<p>Copyright 2015 zach wick <a href="&#109;&#x61;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#122;&#x61;&#99;&#104;&#64;&#122;&#97;&#99;&#x68;&#x77;&#105;&#99;&#x6b;&#46;&#99;&#111;&#x6d;">&#122;&#x61;&#99;&#104;&#64;&#122;&#97;&#99;&#x68;&#x77;&#105;&#99;&#x6b;&#46;&#99;&#111;&#x6d;</a>
+<p>Copyright 2015 zach wick <a href="&#109;&#x61;&#x69;&#108;&#116;&#x6f;&#58;&#122;&#97;&#x63;&#104;&#x40;&#x7a;&#x61;&#99;&#x68;&#119;&#105;&#99;&#107;&#x2e;&#99;&#x6f;&#x6d;">&#122;&#97;&#x63;&#104;&#x40;&#x7a;&#x61;&#99;&#x68;&#119;&#105;&#99;&#107;&#x2e;&#99;&#x6f;&#x6d;</a>
 Licensed under the GNU GPLv3 or later</p>
 
             </div>
@@ -47,7 +47,7 @@ Licensed under the GNU GPLv3 or later</p>
 <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *argp_program_version = <span class="hljs-string">"ml 0.0.2"</span>;
 <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *arpg_program_bug_address = <span class="hljs-string">"&lt;zach@zachwick.com&gt;"</span>;
 <span class="hljs-keyword">static</span> <span class="hljs-keyword">char</span> doc[] = <span class="hljs-string">"an ls-like program part of edutils."</span>;
-<span class="hljs-keyword">static</span> <span class="hljs-keyword">char</span> args_doc[] = <span class="hljs-string">"[FILENAME]"</span>;
+<span class="hljs-keyword">static</span> <span class="hljs-keyword">char</span> args_doc[] = <span class="hljs-string">"[FILE]"</span>;
 <span class="hljs-keyword">static</span> <span class="hljs-keyword">struct</span> argp_option options[] = {
 	{<span class="hljs-string">"long"</span>, <span class="hljs-string">'l'</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-string">"Use long output format"</span>},
 	{<span class="hljs-number">0</span>}
@@ -55,6 +55,7 @@ Licensed under the GNU GPLv3 or later</p>
 
 <span class="hljs-keyword">struct</span> arguments {
 	<span class="hljs-keyword">int</span> long_output;
+	<span class="hljs-keyword">char</span> *args[<span class="hljs-number">1</span>];
 };
 
 <span class="hljs-function"><span class="hljs-keyword">static</span> error_t
@@ -98,6 +99,7 @@ our <code>arguments</code> structure.</p>
             
             <div class="content"><div class='highlight'><pre>			argp_usage (state);
 		}
+		arguments-&gt;args[state-&gt;arg_num] = arg;
 		<span class="hljs-keyword">break</span>;
 	<span class="hljs-keyword">default</span>:
 		<span class="hljs-keyword">return</span> ARGP_ERR_UNKNOWN;
@@ -236,10 +238,10 @@ as a default</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">if</span> (argc &lt; <span class="hljs-number">2</span>) {
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">if</span> (argc == <span class="hljs-number">1</span> || (arguments.long_output &amp;&amp; argc == <span class="hljs-number">2</span>)) {
 		dirname = getcwd (NULL, <span class="hljs-number">0</span>);
 	} <span class="hljs-keyword">else</span> {
-		dirname = argv[<span class="hljs-number">1</span>];
+		dirname = arguments.args[<span class="hljs-number">0</span>];
 	}</pre></div></div>
             
         </li>
