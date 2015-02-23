@@ -46,9 +46,9 @@ main(int argc, char *argv[]) {
 	while ((dit = readdir(dip)) != NULL) {
 		i++;
 		if (i == 0) {
-			printf("%s", dit->d_name);
+			puts(dit->d_name);
 		} else {
-			printf("%s  ", dit->d_name);
+			puts(dit->d_name);
 		}
 	}
 	printf("\n");
