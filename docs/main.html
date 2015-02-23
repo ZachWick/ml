@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>main.c</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>main.c</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>ml - mini list
+An <code>ls</code>-like program written as an educational exercise</p>
+<p>Copyright 2015 zach wick <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#111;&#58;&#x7a;&#x61;&#99;&#104;&#x40;&#x7a;&#x61;&#99;&#x68;&#119;&#105;&#99;&#x6b;&#x2e;&#x63;&#111;&#x6d;">&#x7a;&#x61;&#99;&#104;&#x40;&#x7a;&#x61;&#99;&#x68;&#119;&#105;&#99;&#x6b;&#x2e;&#x63;&#111;&#x6d;</a>
+Licensed under the GNU GPLv3 or later</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-preprocessor">#<span class="hljs-keyword">include</span> &lt;stdio.h&gt;</span>
+<span class="hljs-preprocessor">#<span class="hljs-keyword">include</span> &lt;sys/types.h&gt;</span>
+<span class="hljs-preprocessor">#<span class="hljs-keyword">include</span> &lt;dirent.h&gt;</span>
+<span class="hljs-preprocessor">#<span class="hljs-keyword">include</span> &lt;errno.h&gt;</span>
+<span class="hljs-preprocessor">#<span class="hljs-keyword">include</span> &lt;unistd.h&gt;</span>
+<span class="hljs-preprocessor">#<span class="hljs-keyword">include</span> &lt;stdlib.h&gt;</span>
+<span class="hljs-preprocessor">#<span class="hljs-keyword">include</span> &lt;sys/ioctl.h&gt;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span>
+<span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> *argv[])</span> </span>{
+	DIR *dip;
+	<span class="hljs-keyword">struct</span> dirent *dit;
+
+	<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;
+	<span class="hljs-keyword">char</span> *dirname;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>If a directory path is not supplied, use the present working directory
+as a default</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">if</span> (argc &lt; <span class="hljs-number">2</span>) {
+		dirname = getcwd (NULL, <span class="hljs-number">0</span>);
+	} <span class="hljs-keyword">else</span> {
+		dirname = argv[<span class="hljs-number">1</span>];
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Open a directory stream to dirname and make sure that it is
+readable and valid (directory)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">if</span> ((dip = opendir(dirname)) == NULL) {
+		perror (<span class="hljs-string">"error at opendir"</span>);
+		<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Read in the files from dirname and print</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">while</span> ((dit = readdir(dip)) != NULL) {
+		i++;
+		<span class="hljs-keyword">if</span> (i == <span class="hljs-number">0</span>) {
+			<span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s"</span>, dit-&gt;d_name);
+		} <span class="hljs-keyword">else</span> {
+			<span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s  "</span>, dit-&gt;d_name);
+		}
+	}
+	<span class="hljs-built_in">printf</span>(<span class="hljs-string">"\n"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Close the stream to argv[1] and check for errors</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">if</span> (closedir(dip) == -<span class="hljs-number">1</span>) {
+		perror (<span class="hljs-string">"closedir"</span>);
+		<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+	}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Memory cleanup</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-built_in">free</span> (dirname);
+	
+	<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
