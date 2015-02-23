@@ -14,18 +14,27 @@
 #include <stdlib.h>
 #include <sys/ioctl.h>
 
-#define VERSION "0.0.1"
+#define VERSION "0.0.2"
 #define AUTHOR "zach wick <zach@zachwick.com>"
+
+static int
+_true (const struct dirent *empty) {
+	// In order to fix a compiler warning, we need to make sure that the
+	// signature of our _true function matches what the scandir function
+	// expects. Deshalb, we have to accept an argument that we don't use.
+	return 1;
+}
 
 int
 main(int argc, char *argv[]) {
-	DIR *dip;
-	struct dirent *dit;
+	// This will be our list of dirents returned by the scandir function
+	struct dirent **dits;
 
-	int i=0;
+	// The number of files/nodes that are contained in the directory
+	int num_files = 0;
+	
 	char *dirname;
 	
-
 	// If a directory path is not supplied, use the present working directory
 	// as a default
 	if (argc < 2) {
@@ -34,38 +43,34 @@ main(int argc, char *argv[]) {
 		dirname = argv[1];
 	}
 
+	// Call the scandir function.
+	// The 3rd param is a filter/selctor function; we want all children of the
+	// directory, so we use our `_true` function to accept all children.
+	// The 4th param is a sort function. We are using alphasort, which is
+	// provided by the GNU stdlib
+	num_files = scandir (dirname, &dits, _true, alphasort);
 
-	// Open a directory stream to dirname and make sure that it is
-	// readable and valid (directory)
-	if ((dip = opendir(dirname)) == NULL) {
-		perror ("error at opendir");
-		return 0;
-	}
-
-	// Read in the files from dirname and print
-	while ((dit = readdir(dip)) != NULL) {
-		i++;
-		if (i == 0) {
-			puts(dit->d_name);
-		} else {
-			puts(dit->d_name);
+	if (num_files >= 0) {
+		int count;
+		for (count = 0; count < num_files; ++count) {
+			// This is where we actually write the nodes' names to STDOUT
+			puts(dits[count]->d_name);
 		}
-	}
-	printf("\n");
-
-	// Close the stream to argv[1] and check for errors
-	if (closedir(dip) == -1) {
-		perror ("closedir");
-		return 0;
-	}
-
-	// Memory cleanup
+		// Clean up the memory allocatted by scandir
+		for (count = 0; count < num_files; ++count) {
+			// Free each dirent before freeing dits as a whole
+			free(dits[count]);
+		}
+		free(dits);
+	} else {
+		perror ("Error opening directory");
+	}	
+	
 	// We can't free `dirname` unless getcwd got called - which only happens
 	// if a path to list is supplied by the user
 	if (argc < 2) {
 		free (dirname);
-	}
-	
-	return 1;
+	}	
+	return 0;
 }
 
