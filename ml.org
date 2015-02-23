@@ -8,6 +8,10 @@ the terminal is and pretty-print in nice columns
 *** TODO make a struct for each node to hold data for pretty printing
 
 * FEATURES
+** TODO implement --version behavior
+This should print out the license info and a version string
+** TODO implement -s (sort order)
+Default sorting mechanism should be a-z
 ** TODO implement single file ls behavior (eg. `ls ./.emacs`)
 ** TODO implement -l switch (long format)
 ** TODO implement -a switch (all nodes)

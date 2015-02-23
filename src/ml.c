@@ -14,6 +14,9 @@
 #include <stdlib.h>
 #include <sys/ioctl.h>
 
+#define VERSION "0.0.1"
+#define AUTHOR "zach wick <zach@zachwick.com>"
+
 int
 main(int argc, char *argv[]) {
 	DIR *dip;
