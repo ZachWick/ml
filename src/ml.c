@@ -69,7 +69,7 @@ main(int argc, char **argv) {
 
 	// The number of files/nodes that are contained in the directory
 	int num_files = 0;
-	
+	int use_curr_dir = 0;
 	char *dirname;
 	
 	// Command line argument parsing
@@ -81,10 +81,11 @@ main(int argc, char **argv) {
 
 	// If a directory path is not supplied, use the present working directory
 	// as a default
-	if (argc == 2 && arguments.long_output || argc < 2) {
+	use_curr_dir = argc == 2 && arguments.long_output || argc < 2;
+	if (use_curr_dir) {
 		dirname = getcwd (NULL, 0);
 	} else {
-		dirname = argv[2];
+		dirname = argv[argc - 1];
 	}
 
 	// Call the scandir function.
@@ -112,7 +113,7 @@ main(int argc, char **argv) {
 	
 	// We can't free `dirname` unless getcwd got called - which only happens
 	// if a path to list is supplied by the user
-	if (argc < 2) {
+	if (use_curr_dir) {
 		free (dirname);
 	}	
 	return 0;
