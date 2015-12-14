@@ -77,6 +77,8 @@ main(int argc, char **argv)
 	int use_curr_dir = 0;
 	int stat_err = 0;
 	char *dirname;
+	char rusr,wusr,xusr,rgrp,wgrp,xgrp,roth,woth,xoth;
+	
 	struct stat file_stat;
 	
 	// Command line argument parsing
@@ -116,7 +118,16 @@ main(int argc, char **argv)
 							// Stat the file system object
 							if (stat(dits[count]->d_name, &file_stat) == 0)
 								{
-									printf("%d %d %d %s\n",
+									printf("%s%s%s%s%s%s%s%s%s %d %d %d %s\n",
+									       file_stat.st_mode & S_IRUSR ? "r" : "-",
+									       file_stat.st_mode & S_IWUSR ? "w" : "-",
+									       file_stat.st_mode & S_IXUSR ? "x" : "-",
+									       file_stat.st_mode & S_IRGRP ? "r" : "-",
+									       file_stat.st_mode & S_IWGRP ? "w" : "-",
+									       file_stat.st_mode & S_IXGRP ? "x" : "-",
+									       file_stat.st_mode & S_IROTH ? "r" : "-",
+									       file_stat.st_mode & S_IWOTH ? "w" : "-",
+									       file_stat.st_mode & S_IXOTH ? "x" : "-",
 									       file_stat.st_uid,
 									       file_stat.st_gid,
 									       file_stat.st_size,
