@@ -24,12 +24,14 @@ static struct argp_option options[] = {
 	{0}
 };
 
-struct arguments {
+struct arguments
+{
 	int long_output;
 };
 
 static error_t
-parse_opt (int key, char *arg, struct argp_state *state) {
+parse_opt (int key, char *arg, struct argp_state *state)
+{
 	// Get the `input` argument from `argp-parse` which we know is a pointer to
 	// our `arguments` structure.
 	struct arguments *arguments = state->input;
@@ -55,7 +57,8 @@ static struct argp argp = { options, parse_opt, args_doc, doc };
 
 
 static int
-_true (const struct dirent *empty) {
+_true (const struct dirent *empty)
+{
 	// In order to fix a compiler warning, we need to make sure that the
 	// signature of our _true function matches what the scandir function
 	// expects. Deshalb, we have to accept an argument that we don't use.
@@ -63,7 +66,8 @@ _true (const struct dirent *empty) {
 }
 
 int
-main(int argc, char **argv) {
+main(int argc, char **argv)
+{
 	// This will be our list of dirents returned by the scandir function
 	struct dirent **dits;
 
@@ -82,11 +86,14 @@ main(int argc, char **argv) {
 	// If a directory path is not supplied, use the present working directory
 	// as a default
 	use_curr_dir = argc == 2 && arguments.long_output || argc < 2;
-	if (use_curr_dir) {
-		dirname = getcwd (NULL, 0);
-	} else {
-		dirname = argv[argc - 1];
-	}
+	if (use_curr_dir)
+		{
+			dirname = getcwd (NULL, 0);
+		}
+	else
+		{
+			dirname = argv[argc - 1];
+		}
 
 	// Call the scandir function.
 	// The 3rd param is a filter/selctor function; we want all children of the
@@ -95,21 +102,33 @@ main(int argc, char **argv) {
 	// provided by the GNU stdlib
 	num_files = scandir (dirname, &dits, _true, alphasort);
 
-	if (num_files >= 0) {
-		int count;
-		for (count = 0; count < num_files; ++count) {
-			// This is where we actually write the nodes' names to STDOUT
-			puts(dits[count]->d_name);
+	if (num_files >= 0)
+		{
+			int count;
+			for (count = 0; count < num_files; ++count)
+				{
+					// This is where we actually write the nodes' names to STDOUT
+					if (arguments.long_output)
+						{
+							
+						}
+					else
+						{
+							puts(dits[count]->d_name);
+						}
+				}
+			// Clean up the memory allocatted by scandir
+			for (count = 0; count < num_files; ++count)
+				{
+					// Free each dirent before freeing dits as a whole
+					free(dits[count]);
+				}
+			free(dits);
 		}
-		// Clean up the memory allocatted by scandir
-		for (count = 0; count < num_files; ++count) {
-			// Free each dirent before freeing dits as a whole
-			free(dits[count]);
+	else
+		{
+			perror ("Error opening directory");
 		}
-		free(dits);
-	} else {
-		perror ("Error opening directory");
-	}	
 	
 	// We can't free `dirname` unless getcwd got called - which only happens
 	// if a path to list is supplied by the user
