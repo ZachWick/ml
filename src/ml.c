@@ -25,6 +25,7 @@ static struct argp_option options[] = {
 };
 
 struct arguments {
+	char *args[2];
 	int long_output;
 };
 
@@ -43,6 +44,7 @@ parse_opt (int key, char *arg, struct argp_state *state) {
 			// Too many arguments were passed to `ml`
 			argp_usage (state);
 		}
+		arguments->args[state->arg_num] = arg;
 		break;
 	default:
 		return ARGP_ERR_UNKNOWN;
@@ -81,10 +83,10 @@ main(int argc, char **argv) {
 
 	// If a directory path is not supplied, use the present working directory
 	// as a default
-	if (argc < 2) {
+	if (argc == 2 && arguments.long_output || argc < 2) {
 		dirname = getcwd (NULL, 0);
 	} else {
-		dirname = argv[1];
+		dirname = argv[2];
 	}
 
 	// Call the scandir function.
