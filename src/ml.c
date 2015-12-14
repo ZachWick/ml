@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <argp.h>
 #include <sys/ioctl.h>
+#include <sys/stat.h>
 
 const char *argp_program_version = "ml 0.0.2";
 const char *arpg_program_bug_address = "<zach@zachwick.com>";
