@@ -75,7 +75,9 @@ main(int argc, char **argv)
 	// The number of files/nodes that are contained in the directory
 	int num_files = 0;
 	int use_curr_dir = 0;
+	int stat_err = 0;
 	char *dirname;
+	struct stat file_stat;
 	
 	// Command line argument parsing
 	struct arguments arguments;
@@ -111,7 +113,15 @@ main(int argc, char **argv)
 					// This is where we actually write the nodes' names to STDOUT
 					if (arguments.long_output)
 						{
-							
+							// Stat the file system object
+							if (stat(dits[count]->d_name, &file_stat) == 0)
+								{
+									printf("%d %d %d %s\n",
+									       file_stat.st_uid,
+									       file_stat.st_gid,
+									       file_stat.st_size,
+									       dits[count]->d_name);
+								}
 						}
 					else
 						{
