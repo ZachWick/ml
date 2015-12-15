@@ -118,7 +118,8 @@ main(int argc, char **argv)
 							// Stat the file system object
 							if (stat(dits[count]->d_name, &file_stat) == 0)
 								{
-									printf("%s%s%s%s%s%s%s%s%s %d %d %d %s\n",
+									printf("%s%s%s%s%s%s%s%s%s%s %d %d %d %s\n",
+									       S_ISDIR(file_stat.st_mode)  ? "d" : "-",
 									       file_stat.st_mode & S_IRUSR ? "r" : "-",
 									       file_stat.st_mode & S_IWUSR ? "w" : "-",
 									       file_stat.st_mode & S_IXUSR ? "x" : "-",
