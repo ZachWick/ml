@@ -16,6 +16,8 @@
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <time.h>
+#include <pwd.h>
+#include <grp.h>
 
 #define SIZE 20
 
@@ -81,7 +83,9 @@ main(int argc, char **argv)
 	int stat_err = 0;
 	char *dirname;
 	char buffer[SIZE];
-	
+
+	struct passwd *user;
+	struct group *group;
 	struct stat file_stat;
 	
 	// Command line argument parsing
@@ -121,8 +125,10 @@ main(int argc, char **argv)
 							// Stat the file system object
 							if (stat(dits[count]->d_name, &file_stat) == 0)
 								{
+									user  = getpwuid(file_stat.st_uid);
+									group = getgrgid(file_stat.st_gid);
 									strftime(buffer, SIZE, "%F %H:%M:%S", localtime(&file_stat.st_mtime));
-									printf("%s%s%s%s%s%s%s%s%s%s %d %d %d %s %s\n",
+									printf("%s%s%s%s%s%s%s%s%s%s %s %s %8d %-19s %s\n",
 									       S_ISDIR(file_stat.st_mode)  ? "d" : "-",
 									       file_stat.st_mode & S_IRUSR ? "r" : "-",
 									       file_stat.st_mode & S_IWUSR ? "w" : "-",
@@ -133,8 +139,8 @@ main(int argc, char **argv)
 									       file_stat.st_mode & S_IROTH ? "r" : "-",
 									       file_stat.st_mode & S_IWOTH ? "w" : "-",
 									       file_stat.st_mode & S_IXOTH ? "x" : "-",
-									       file_stat.st_uid,
-									       file_stat.st_gid,
+									       user->pw_name,
+									       group->gr_name,
 									       file_stat.st_size,
 									       buffer,
 									       dits[count]->d_name);
@@ -162,7 +168,7 @@ main(int argc, char **argv)
 	// if a path to list is supplied by the user
 	if (use_curr_dir) {
 		free (dirname);
-	}	
+	}
 	return 0;
 }
 
