@@ -15,6 +15,9 @@
 #include <argp.h>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
+#include <time.h>
+
+#define SIZE 20
 
 const char *argp_program_version = "ml 0.0.2";
 const char *arpg_program_bug_address = "<zach@zachwick.com>";
@@ -77,7 +80,7 @@ main(int argc, char **argv)
 	int use_curr_dir = 0;
 	int stat_err = 0;
 	char *dirname;
-	char rusr,wusr,xusr,rgrp,wgrp,xgrp,roth,woth,xoth;
+	char buffer[SIZE];
 	
 	struct stat file_stat;
 	
@@ -118,7 +121,8 @@ main(int argc, char **argv)
 							// Stat the file system object
 							if (stat(dits[count]->d_name, &file_stat) == 0)
 								{
-									printf("%s%s%s%s%s%s%s%s%s%s %d %d %d %s\n",
+									strftime(buffer, SIZE, "%F %H:%M:%S", localtime(&file_stat.st_mtime));
+									printf("%s%s%s%s%s%s%s%s%s%s %d %d %d %s %s\n",
 									       S_ISDIR(file_stat.st_mode)  ? "d" : "-",
 									       file_stat.st_mode & S_IRUSR ? "r" : "-",
 									       file_stat.st_mode & S_IWUSR ? "w" : "-",
@@ -132,6 +136,7 @@ main(int argc, char **argv)
 									       file_stat.st_uid,
 									       file_stat.st_gid,
 									       file_stat.st_size,
+									       buffer,
 									       dits[count]->d_name);
 								}
 						}
